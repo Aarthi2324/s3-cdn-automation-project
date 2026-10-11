@@ -18,7 +18,7 @@ env:
   BACKUP:   backups/index-previous.html
   REGION:   us-east-1
   DIST_ID:  E16PMW8CLAWUVM
-  SITE_URL: d133wr5kph9hfj.cloudfront.net
+  SITE_URL: https://d133wr5kph9hfj.cloudfront.net
   MARKER:   SITE-OK
 
 jobs:

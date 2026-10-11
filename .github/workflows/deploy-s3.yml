@@ -14,11 +14,11 @@ permissions:
 #dj
 env:
   FILE:     index.html
-  BUCKET:   6f-11-10 
+  BUCKET:   aws-project-1110
   BACKUP:   backups/index-previous.html
   REGION:   us-east-1
-  DIST_ID:  EMLGCBQAN60NE
-  SITE_URL: https://d3msndkc5t3wr.cloudfront.net
+  DIST_ID:  E16PMW8CLAWUVM
+  SITE_URL: d133wr5kph9hfj.cloudfront.net
   MARKER:   SITE-OK
 
 jobs:
@@ -79,3 +79,4 @@ jobs:
           echo "- Site: $SITE_URL" >> "$GITHUB_STEP_SUMMARY"
           echo "- Roll back by hand:" >> "$GITHUB_STEP_SUMMARY"
           echo "  \`aws s3 cp s3://$BUCKET/$BACKUP s3://$BUCKET/$FILE --cache-control no-cache\`" >> "$GITHUB_STEP_SUMMARY"
+

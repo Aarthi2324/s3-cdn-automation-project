@@ -1,82 +1,37 @@
-name: Self-Healing Deploy
-
-on:
-  push:
-    branches: [ master ]
-  workflow_dispatch:
-
-concurrency:
-  group: deploy-prod
-  cancel-in-progress: false
-
-permissions:
-  contents: read
-#dj
-env:
-  FILE:     index.html
-  BUCKET:   aws-project-1110
-  BACKUP:   backups/index-previous.html
-  REGION:   us-east-1
-  DIST_ID:  E16PMW8CLAWUVM
-  SITE_URL: https://d133wr5kph9hfj.cloudfront.net
-  MARKER:   SITE-OK
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Log in to AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region:            ${{ env.REGION }}
-
-      - name: Check the file
-        run: python check-html.py "$FILE"
-
-      - name: Upload to S3
-        run: aws s3 cp "$FILE" "s3://$BUCKET/$FILE" --cache-control no-cache
-
-      - name: Clear CloudFront cache
-        run: |
-          ID=$(aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
-                 --paths "/*" --query 'Invalidation.Id' --output text)
-          aws cloudfront wait invalidation-completed --distribution-id "$DIST_ID" --id "$ID"
-
-      - name: Check the live website
-        run: |
-          # -L is required: CloudFront redirects http to https
-          curl -fsSL --retry 5 --retry-delay 10 -o page.html "$SITE_URL"
-          test "$(grep -c "$MARKER" page.html)" -eq 1
-          test "$(wc -c < page.html)" -ge 1000
-          echo "Site is healthy."
-
-      # Only runs when the check above passed, so the backup is always
-      # the last version that actually worked.
-      - name: Remember this version as the good one
-        run: aws s3 cp "s3://$BUCKET/$FILE" "s3://$BUCKET/$BACKUP"
-
-      - name: Put the last good version back
-        if: failure()
-        run: |
-          aws s3 cp "s3://$BUCKET/$BACKUP" "s3://$BUCKET/$FILE" --cache-control no-cache
-          ID=$(aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
-                 --paths "/*" --query 'Invalidation.Id' --output text)
-          aws cloudfront wait invalidation-completed --distribution-id "$DIST_ID" --id "$ID"
-          curl -fsSL --retry 5 --retry-delay 10 -o page.html "$SITE_URL"
-          grep -q "$MARKER" page.html
-          echo "::warning::Deploy failed. The last good version is back and healthy."
-
-      - name: Report
-        if: always()
-        run: |
-          echo "### Deploy report" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Site: $SITE_URL" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Roll back by hand:" >> "$GITHUB_STEP_SUMMARY"
-          echo "  \`aws s3 cp s3://$BUCKET/$BACKUP s3://$BUCKET/$FILE --cache-control no-cache\`" >> "$GITHUB_STEP_SUMMARY"
-
+<!DOCTYPE html>
+<html>
+<head>
+<title>Self‑Healing Deploy Demo</title>
+<meta charset="UTF-8">
+<style>
+  body {font-family: Arial, sans-serif; line-height: 1.6; margin: 2em;}
+  h1 {color: #2c3e50;}
+</style>
+</head>
+<body>
+<h1>Welcome to the Self‑Healing Deploy Demo</h1>
+<p>SITE-OK</p>
+<p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.
+Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.
+Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.
+</p>
+<p>
+Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum.
+Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper.
+Aliquam erat volutpat. Sed posuere consectetur est at lobortis.
+</p>
+<p>
+Curabitur blandit tempus porttitor. Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.
+Aenean lacinia bibendum nulla sed consectetur. Nulla vitae elit libero, a pharetra augue.
+</p>
+<p>
+In hac habitasse platea dictumst. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra,
+per inceptos himenaeos. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia
+molestie dui, ut aliquet nisl pharetra a.
+</p>
+<footer>
+<small>&copy; 2026 Teaching Project. All rights reserved.</small>
+</footer>
+</body>
+</html>

@@ -17,8 +17,8 @@ env:
   BUCKET:   aws-project-1110
   BACKUP:   backups/index-previous.html
   REGION:   us-east-1
-  DIST_ID:  E16PMW8CLAWUVM
-  SITE_URL: https://d133wr5kph9hfj.cloudfront.net
+  DIST_ID:  E12F74N5SPWZ3L
+  SITE_URL: https://d2zzzr838u1pdg.cloudfront.net
   MARKER:   SITE-OK
 
 jobs:

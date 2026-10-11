@@ -119,7 +119,7 @@
     <p>After uploading, the workflow downloads the live page and looks for
        one specific word inside it:</p>
 <pre><code>curl -fsSL https://d133wr5kph9hfj.cloudfront.net/ -o page.html
-grep -qF "SITE-OK" page.html</code></pre>
+grep -qF "SITE&#45;OK" page.html</code></pre>
     <p class="muted">Marker found &rarr; deploy succeeds.<br>
        Marker missing &rarr; deploy fails and the old version is restored.</p>
   </div>
@@ -131,7 +131,7 @@ grep -qF "SITE-OK" page.html</code></pre>
           commit and push. Watch the pipeline go green, then reload the
           live site &mdash; you should see version 2.</li>
       <li>Now break it on purpose. Find the
-          <code>&lt;!&minus;&minus; SITE-OK &minus;&minus;&gt;</code>
+          <code>&lt;!&minus;&minus; SITE&#45;OK &minus;&minus;&gt;</code>
           comment near the top of this file and delete it. Push again.</li>
       <li>Watch the deploy fail, then watch it put version 2 back by itself.
           The live site never shows the broken page.</li>
@@ -147,15 +147,14 @@ grep -qF "SITE-OK" page.html</code></pre>
        deleting the real marker would still leave matches behind, and the
        health check could never fail.</p>
     <p>So every mention on this page except the real marker is written as
-       <code>SITE-OK</code>. The browser shows a normal hyphen;
+       <code>SITE&#45;OK</code>. The browser shows a normal hyphen;
        <code>grep</code> sees something different. That keeps exactly
        <strong>one</strong> match in the file.</p>
     <p class="muted">Check it for yourself:
-       <code>grep -c "SITE-OK" index.html</code> should print
+       <code>grep -c "SITE&#45;OK" index.html</code> should print
        <code>1</code>.</p>
   </div>
 
 </main>
 </body>
 </html>
-

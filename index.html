@@ -104,7 +104,7 @@
 <main>
 
   <div class="card">
-    <span class="version">VERSION 100000</span>
+    <span class="version">VERSION 1</span>
     <h1 style="margin-top:14px">Deploy Demo BY CLoud-team</h1>
     <p class="muted" style="margin:0">
       A tiny page for practising an S3 &plus; CloudFront deploy pipeline.
@@ -118,7 +118,7 @@
     <h2>How the pipeline checks this page</h2>
     <p>After uploading, the workflow downloads the live page and looks for
        one specific word inside it:</p>
-<pre><code>curl -sf https://YOUR-SITE/ -o page.html
+<pre><code>curl -sf https://d2zzzr838u1pdg.cloudfront.net// -o page.html
 grep -q "SITE&#45;OK" page.html</code></pre>
     <p class="muted">Marker found &rarr; deploy succeeds.<br>
        Marker missing &rarr; deploy fails and the old version is restored.</p>
@@ -158,3 +158,4 @@ grep -q "SITE&#45;OK" page.html</code></pre>
 </main>
 </body>
 </html>
+

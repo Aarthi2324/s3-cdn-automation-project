@@ -17,7 +17,7 @@
      name is written with an HTML entity (SITE&#45;OK) so that it
      LOOKS the same in the browser but does NOT match the grep.
      =================================================================== -->
-<!-- Site-ok -->
+<!-- SITE-OK -->
 
 <style>
   :root {
@@ -115,7 +115,7 @@
   </div>
 
   <div class="card">
-    <h2>How the pipeline checks this page
+    <h2>How the pipeline checks this page</h2>
     <p>After uploading, the workflow downloads the live page and looks for
        one specific word inside it:</p>
 <pre><code>curl -fsSL https://d133wr5kph9hfj.cloudfront.net/ -o page.html
@@ -158,4 +158,3 @@ grep -qF "SITE&#45;OK" page.html</code></pre>
 </main>
 </body>
 </html>
-
